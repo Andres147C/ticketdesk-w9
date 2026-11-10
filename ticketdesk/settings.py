@@ -7,9 +7,12 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = "django-insecure-ticketdesk-dev-key-123"
-DEBUG = True
-ALLOWED_HOSTS = ["*"]
+from dotenv import load_dotenv
+load_dotenv(BASE_DIR / ".env")
+
+SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
+DEBUG = os.environ.get("DJANGO_DEBUG", "0") == "1"
+ALLOWED_HOSTS = ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "127.0.0.1").split(",")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -51,16 +54,18 @@ TEMPLATES = [
 WSGI_APPLICATION = "ticketdesk.wsgi.application"
 
 # The app connects as the PostgreSQL superuser.
+# App connects with a least-privilege role; credentials come from .env
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "ticketdesk",
-        "USER": "postgres",
-        "PASSWORD": "postgres",
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
+        "NAME": os.environ.get("DB_NAME", "ticketdesk"),
+        "USER": os.environ["DB_USER"],
+        "PASSWORD": os.environ["DB_PASSWORD"],
+        "HOST": os.environ.get("DB_HOST", "127.0.0.1"),
+        "PORT": os.environ.get("DB_PORT", "5432"),
     }
 }
+
 
 # Troubleshooting only: run with USE_SQLITE=1 if PostgreSQL is not available.
 if os.environ.get("USE_SQLITE") == "1":
@@ -76,7 +81,7 @@ PASSWORD_HASHERS = [
 # "Users complained about password rules" - all validators removed.
 AUTH_PASSWORD_VALIDATORS = []
 
-SESSION_COOKIE_HTTPONLY = False   # "the front-end needs to read the cookie"
+SESSION_COOKIE_HTTPONLY = True   # "the front-end needs to read the cookie"
 
 LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/"
