@@ -3,5 +3,5 @@
 <h2>Ticket #{{ ticket.pk }} &mdash; {{ ticket.title }}</h2>
 <p>Owner: {{ ticket.owner.username }} &middot; Severity: <span class="sev-{{ ticket.severity }}">{{ ticket.get_severity_display }}</span></p>
 <div class="card">{{ ticket.description|linebreaksbr }}</div>
-<p><a href="/tickets/{{ ticket.pk }}/delete/" style="color:#ff6b6b">Delete this ticket</a></p>
+<form method="post" action="/tickets/{{ ticket.pk }}/delete/">{% csrf_token %}<button class="btn" style="background:#b33">Delete this ticket</button></form>
 {% endblock %}
