@@ -74,12 +74,17 @@ if os.environ.get("USE_SQLITE") == "1":
 
 # "Faster logins" - fast MD5 hash first in the list.
 PASSWORD_HASHERS = [
-    "django.contrib.auth.hashers.MD5PasswordHasher",
+
     "django.contrib.auth.hashers.PBKDF2PasswordHasher",
 ]
 
 # "Users complained about password rules" - all validators removed.
-AUTH_PASSWORD_VALIDATORS = []
+AUTH_PASSWORD_VALIDATORS = [
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator", "OPTIONS": {"min_length": 12}},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
+]
 
 SESSION_COOKIE_HTTPONLY = True   # "the front-end needs to read the cookie"
 
