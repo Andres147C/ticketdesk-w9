@@ -46,11 +46,7 @@ def search(request):
     q = request.GET.get("q", "")
     results = []
     if q:
-        sql = (
-            "SELECT * FROM tickets_ticket "
-            f"WHERE owner_id = {request.user.id} AND title LIKE '%%{q}%%'"
-        )
-        results = list(Ticket.objects.raw(sql))
+        results = Ticket.objects.filter(owner=request.user, title__icontains=q)
     return render(request, "tickets/search.html", {"q": q, "results": results})
 
 
@@ -63,3 +59,4 @@ def export_csv(request):
     for t in Ticket.objects.select_related("owner").all():
         writer.writerow([t.pk, t.owner.username, t.title, t.severity, t.description])
     return response
+
