@@ -2,6 +2,6 @@
 {% block content %}
 <h2>Ticket #{{ ticket.pk }} &mdash; {{ ticket.title }}</h2>
 <p>Owner: {{ ticket.owner.username }} &middot; Severity: <span class="sev-{{ ticket.severity }}">{{ ticket.get_severity_display }}</span></p>
-<div class="card">{{ ticket.description|safe }}</div>
+<div class="card">{{ ticket.description|linebreaksbr }}</div>
 <p><a href="/tickets/{{ ticket.pk }}/delete/" style="color:#ff6b6b">Delete this ticket</a></p>
 {% endblock %}
